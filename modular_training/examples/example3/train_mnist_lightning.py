@@ -36,7 +36,7 @@ def plot_training(metrics):
 def main():
 
     # Set model parameters
-    data_dir = "../../data"
+    data_dir = "../../../data"
     batch_size = 32
     hidden_size = 20
 

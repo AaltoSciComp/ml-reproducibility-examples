@@ -123,7 +123,7 @@ def main():
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    data_dir = "../../data"
+    data_dir = "../../../data"
     train_dataset = datasets.MNIST(
         data_dir, train=True, download=True, transform=ToTensor()
     )

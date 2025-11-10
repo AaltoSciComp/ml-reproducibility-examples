@@ -14,7 +14,7 @@ import numpy as np
 
 # Set up data sets and data loaders
 
-data_dir = "../../data"
+data_dir = "../../../data"
 
 batch_size = 32
 
