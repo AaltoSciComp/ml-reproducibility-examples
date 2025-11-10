@@ -102,7 +102,7 @@ ax2.set_title("Accuracy")
 
 fig.savefig("training_results.png")
 
-# Validate the model
+# Test the model
 model.eval()
 
 num_test_batches = len(test_loader)
@@ -122,4 +122,4 @@ for data, target in tqdm(test_loader, total=num_test_batches):
     test_total_correct += (predicted == target).sum().item()
 
 test_accuracy = test_total_correct / num_test_items
-print(f"Validation accuracy: {test_accuracy:.2%}")
+print(f"Testing accuracy: {test_accuracy:.2%}")

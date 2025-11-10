@@ -35,7 +35,7 @@ def create_model(model_structure, optimizer_class, device="cpu"):
 def train(
     model, dataloader, criterion, optimizer, batch_size=32, epochs=5, device="cpu"
 ):
-    # Define training and validation functions
+    # Define training function
 
     model.train()
 
@@ -77,8 +77,8 @@ def train(
     return losses, accuracies
 
 
-def validate(model, dataloader, criterion, device="cpu"):
-    # Validate the model
+def test(model, dataloader, criterion, device="cpu"):
+    # Define testing function
     model.eval()
 
     num_batches = len(dataloader)
@@ -164,8 +164,8 @@ def main():
     fig, axes = plot_training(losses, accuracies)
     fig.savefig(training_plot)
 
-    # Validate model
-    validate(model, test_loader, criterion, device=device)
+    # Test the model
+    test(model, test_loader, criterion, device=device)
 
 
 if __name__ == "__main__":
