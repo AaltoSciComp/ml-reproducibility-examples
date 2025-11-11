@@ -11,15 +11,15 @@ from torch.utils.tensorboard import SummaryWriter
 import torch.profiler
 import argparse
 import time
+import numpy as np, random
 
 def seed_all(seed):
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
-    import numpy as np, random
     np.random.seed(seed)
     random.seed(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
 
 def worker_init_fn(worker_id):
     worker_seed = torch.initial_seed() % 2**32
@@ -30,13 +30,14 @@ def get_model():
     return torchvision.models.resnet152(num_classes=100)  # CIFAR-100 has 100 classes
 
 def train(rank, world_size):
-    if "seed" in globals() and seed is not None:
-        seed_all(seed + rank)  # each rank offset
 
     dist.init_process_group("nccl", rank=rank, world_size=world_size)
     torch.cuda.set_device(rank)
     device = torch.device(f"cuda:{rank}")
 
+    if "seed" in globals() and seed is not None:
+        seed_all(seed + rank)  # each rank offset
+    
     transform = transforms.Compose([
         transforms.Resize((224, 224)),  # Match ResNet input
         transforms.ToTensor(),
