@@ -10,4 +10,4 @@
 
 module load scicomp-python-env
 
-OMP_NUM_THREADS=1 python -m torch.distributed.run --standalone --nnodes=1 --nproc_per_node=2 ddp.py
+TF_ENABLE_ONEDNN_OPTS=0 OMP_NUM_THREADS=1 python -m torch.distributed.run --standalone --nnodes=1 --nproc_per_node=2 ddp.py --seed 1234

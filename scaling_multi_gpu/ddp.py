@@ -26,8 +26,31 @@ def worker_init_fn(worker_id):
     np.random.seed(worker_seed)
     random.seed(worker_seed)
 
+
 def get_model():
     return torchvision.models.resnet152(num_classes=100)  # CIFAR-100 has 100 classes
+
+
+def get_trainset():
+    transform = transforms.Compose([
+    transforms.Resize((224, 224)),  # Match ResNet input
+    transforms.ToTensor(),
+    transforms.Normalize((0.5071, 0.4865, 0.4409), (0.2673, 0.2564, 0.2762))  # CIFAR-100 stats
+    ])
+
+    trainset = torchvision.datasets.CIFAR100(
+        root='./data',
+        train=True,
+        download=True,
+        transform=transform
+    )
+    return trainset
+
+
+def get_dataloader(trainset, batch_size, world_size, rank):
+    sampler = DistributedSampler(trainset, num_replicas=world_size, rank=rank)
+    return DataLoader(trainset, batch_size=batch_size, sampler=sampler, num_workers=7), sampler
+
 
 def train(rank, world_size):
 
@@ -38,22 +61,8 @@ def train(rank, world_size):
     if "seed" in globals() and seed is not None:
         seed_all(seed + rank)  # each rank offset
     
-    transform = transforms.Compose([
-        transforms.Resize((224, 224)),  # Match ResNet input
-        transforms.ToTensor(),
-        transforms.Normalize((0.5071, 0.4865, 0.4409), (0.2673, 0.2564, 0.2762))  # CIFAR-100 stats
-    ])
-
-    trainset = torchvision.datasets.CIFAR100(
-        root='./data',
-        train=True,
-        download=True,
-        transform=transform
-    )
-
-    sampler = DistributedSampler(trainset, num_replicas=world_size, rank=rank)
-    # TODO: What happens if we set the batch size to 128/world_size?
-    trainloader = DataLoader(trainset, batch_size=int(128), sampler=sampler, num_workers=7)
+    trainset = get_trainset()
+    trainloader, sampler = get_dataloader(trainset, batch_size=int(128/world_size), world_size=world_size, rank=rank)
 
     model = get_model().to(device)
     model = DDP(model, device_ids=[rank])
@@ -68,7 +77,7 @@ def train(rank, world_size):
         record_shapes=True,
         with_stack=True
     ) as prof:
-        for epoch in range(8):
+        for epoch in range(6):
             dist.barrier()  # Sync all ranks before timing
             start_epoch = time.time()
             sampler.set_epoch(epoch)
@@ -108,6 +117,7 @@ def train(rank, world_size):
             epoch_time = end_epoch - start_epoch
             if rank == 0:
                 print(f"[{epoch + 1}], epoch time: {time.time()-start_epoch}s")  # Reset timer for next group
+                writer.add_scalar('epoch time', epoch_time, epoch)
 
     writer.close()
     dist.destroy_process_group()
