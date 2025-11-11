@@ -12,10 +12,27 @@ import torch.profiler
 import argparse
 import time
 
+def seed_all(seed):
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+    import numpy as np, random
+    np.random.seed(seed)
+    random.seed(seed)
+
+def worker_init_fn(worker_id):
+    worker_seed = torch.initial_seed() % 2**32
+    np.random.seed(worker_seed)
+    random.seed(worker_seed)
+
 def get_model():
     return torchvision.models.resnet152(num_classes=100)  # CIFAR-100 has 100 classes
 
 def train(rank, world_size):
+    if "seed" in globals() and seed is not None:
+    seed_all(seed + rank)  # each rank offset
+
     dist.init_process_group("nccl", rank=rank, world_size=world_size)
     torch.cuda.set_device(rank)
     device = torch.device(f"cuda:{rank}")
@@ -98,6 +115,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--rank", type=int, default=int(os.environ["RANK"]))
     parser.add_argument("--world_size", type=int, default=int(os.environ["WORLD_SIZE"]))
+    parser.add_argument("--seed", type=int, default=None)
     args = parser.parse_args()
     if args.rank == 0:
         print(f"Running DDP with {args.world_size} GPUs")
