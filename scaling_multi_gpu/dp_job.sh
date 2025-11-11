@@ -6,7 +6,7 @@
 #SBATCH --gpus-per-node=2
 #SBATCH --mem=60G
 #SBATCH --time=0:30:00
-#SBATCH --output=ddp_cifar100-%j.out
+#SBATCH --output=logs/dp_cifar100-%j.out
 
 module load scicomp-python-env
 
