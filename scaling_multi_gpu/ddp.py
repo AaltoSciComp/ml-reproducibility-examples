@@ -50,7 +50,7 @@ def train(rank, world_size):
         record_shapes=True,
         with_stack=True
     ) as prof:
-        for epoch in range(4):
+        for epoch in range(8):
             dist.barrier()  # Sync all ranks before timing
             start_epoch = time.time()
             sampler.set_epoch(epoch)
