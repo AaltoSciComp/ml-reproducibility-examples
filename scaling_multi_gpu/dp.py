@@ -47,7 +47,7 @@ def train():
         record_shapes=True,
         with_stack=True
     ) as prof:
-        for epoch in range(4):
+        for epoch in range(8):
             running_loss = 0.0
             start_group = time.time()
             start_epoch = time.time()
