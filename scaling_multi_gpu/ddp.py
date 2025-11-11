@@ -31,7 +31,7 @@ def get_model():
 
 def train(rank, world_size):
     if "seed" in globals() and seed is not None:
-    seed_all(seed + rank)  # each rank offset
+        seed_all(seed + rank)  # each rank offset
 
     dist.init_process_group("nccl", rank=rank, world_size=world_size)
     torch.cuda.set_device(rank)
