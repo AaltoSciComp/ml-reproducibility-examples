@@ -1,0 +1,24 @@
+name: ml-reproducibility
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - ipykernel
+  - pytorch-gpu
+  - torchvision
+  - lightning
+  - huggingface_hub
+  - transformers
+  - accelerate
+  - scikit-learn
+  - tqdm
+  - matplotlib
+  - black
+  - jupyter-black
+  - pandas
+  - tensorboard
+  - mlflow
+  - torchinfo
+  - pip:
+    - mlflow-server-proxy
