@@ -85,5 +85,14 @@ RUN echo "matplotlib" \
 RUN echo "pandas" \
     && pip --no-cache-dir install pandas
 
+RUN echo "torchinfo" \
+    && pip --no-cache-dir install torchinfo
+
+RUN echo "jupyter-server-proxy" \
+    && pip --no-cache-dir install jupyter-server-proxy
+
+RUN echo "mlflow-server-proxy" \
+    && pip --no-cache-dir install mlflow-server-proxy
+
 # disable announcement extension to get rid of newsletter subscription pop-up
 RUN jupyter labextension disable "@jupyterlab/apputils-extension:announcements"
