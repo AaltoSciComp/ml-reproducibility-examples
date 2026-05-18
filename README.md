@@ -5,7 +5,7 @@ This repository contains the materials used in the workshop and examples related
 
 ## **Why this workshop?**
 
-Reproducibility is more than a technical checkbox: it is a habit of working well rooted in the principles of research integrity (Reliability, Honesty, Respect, Accountability). When you document your environment, structure your code, and track your decisions, you are not just helping others to build on your research: you are helping your future self, who will have forgotten why that choice was made and what that experiment was trying to prove. 
+Reproducibility is more than a technical checkbox: it is a habit of working well rooted in the principles of research integrity (Reliability, Honesty, Respect, Accountability, see [this link](https://scicomp.aalto.fi/scicomp/rcr-scicomp/)). When you document your environment, structure your code, and track your decisions, you are not just helping others to build on your research: you are helping your future self, who will have forgotten why that choice was made and what that experiment was trying to prove. 
 
 The course follows a natural path that mirrors how good research actually happens:
 
