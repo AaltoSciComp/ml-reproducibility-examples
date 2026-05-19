@@ -4,21 +4,21 @@ channels:
 dependencies:
   - python=3.12
   - pip
-  - ipykernel
-  - pytorch-gpu
-  - torchvision
-  - lightning
-  - huggingface_hub
-  - transformers
   - accelerate
-  - scikit-learn
-  - tqdm
-  - matplotlib
   - black
+  - huggingface_hub
+  - ipykernel
   - jupyter-black
-  - pandas
-  - tensorboard
+  - lightning
+  - matplotlib
   - mlflow
+  - pandas
+  - pytorch-gpu
+  - scikit-learn
+  - tensorboard
   - torchinfo
+  - torchvision
+  - tqdm
+  - transformers
   - pip:
-    - mlflow-server-proxy
+    - git+https://github.com/americanexpress/mlflow-server-proxy
