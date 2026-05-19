@@ -1,0 +1,9 @@
+dataset:
+  datamodule: "MNISTDataModule"
+  batch_size: 32
+training:
+  num_epochs: 10
+model:
+  model_type: "SimpleMLP"
+  num_hidden_units:
+    - 20
