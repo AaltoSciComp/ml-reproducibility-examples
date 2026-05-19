@@ -4,7 +4,7 @@ import lightning as L
 
 
 class SimpleMLP(L.LightningModule):
-    def __init__(self, hidden_size=20):
+    def __init__(self, hidden_size=20, lr=1e-3):
         # Init is done similar to nn.Module
         super().__init__()
         self.layers = nn.Sequential(
@@ -15,6 +15,7 @@ class SimpleMLP(L.LightningModule):
         )
         # We specify loss function in the module as well
         self.loss = torch.nn.CrossEntropyLoss()
+        self.lr = lr
 
     def forward(self, x):
         # Forward is done similar to nn.Module
@@ -66,4 +67,4 @@ class SimpleMLP(L.LightningModule):
 
     def configure_optimizers(self):
         # configure_optimizers-function specifies how the optimizer is created
-        return torch.optim.AdamW(self.layers.parameters())
+        return torch.optim.AdamW(self.layers.parameters(), lr=self.lr)

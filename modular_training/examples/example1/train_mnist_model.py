@@ -49,7 +49,7 @@ print(model)
 
 criterion = torch.nn.CrossEntropyLoss()
 
-optimizer = torch.optim.AdamW(model.parameters())
+optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3)
 
 # Train the model
 

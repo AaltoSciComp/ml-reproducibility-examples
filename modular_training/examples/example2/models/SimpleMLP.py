@@ -2,13 +2,13 @@ from torch import nn
 
 
 class SimpleMLP(nn.Module):
-    def __init__(self):
+    def __init__(self, hidden_size=20):
         super().__init__()
         self.layers = nn.Sequential(
             nn.Flatten(),
-            nn.Linear(28*28, 20),
+            nn.Linear(28 * 28, hidden_size),
             nn.ReLU(),
-            nn.Linear(20, 10)
+            nn.Linear(hidden_size, 10),
         )
 
     def forward(self, x):

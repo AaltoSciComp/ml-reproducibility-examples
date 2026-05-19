@@ -27,11 +27,13 @@ def create_dataloaders(train_dataset, test_dataset, batch_size=32):
     return train_loader, test_loader
 
 
-def create_model(model_structure, optimizer_class, device="cpu"):
+def create_model(
+    model_structure, model_args, optimizer_class, optimizer_args, device="cpu"
+):
     # Define function for getting model and optimizer
 
-    model = model_structure().to(device)
-    optimizer = optimizer_class(model.parameters())
+    model = model_structure(**model_args).to(device)
+    optimizer = optimizer_class(model.parameters(), **optimizer_args)
     return model, optimizer
 
 
@@ -149,7 +151,13 @@ def main(conf):
     )
 
     # Set up model and optimizer
-    model, optimizer = create_model(model_structure, optimizer_class, device=device)
+    model, optimizer = create_model(
+        model_structure,
+        {"hidden_size": conf.model.hidden_size},
+        optimizer_class,
+        {"lr": conf.optimizer.lr},
+        device=device,
+    )
 
     # Train the model
     losses, accuracies = train(
