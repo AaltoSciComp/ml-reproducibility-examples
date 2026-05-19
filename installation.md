@@ -111,3 +111,12 @@ ml-reproducibility-examples
 
 Then open one of the exercise notebooks and try running it.
 
+### Build your own Python environemnt using conda/mamba
+
+You can also re-build the same Python environment using conda / mamba. Follow the same instructions as the conda installation for our CodeRefinery workshop at: https://coderefinery.github.io/installation/conda/ but, in this case, please use the environment.yml available in this repository.
+
+The command to set up the environment will then be:
+
+```
+mamba env create -n ml-reproducibility -f https://raw.githubusercontent.com/AaltoSciComp/ml-reproducibility-examples/refs/heads/main/environment.yml
+```
