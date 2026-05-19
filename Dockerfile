@@ -92,7 +92,17 @@ RUN echo "jupyter-server-proxy" \
     && pip --no-cache-dir install jupyter-server-proxy
 
 RUN echo "mlflow-server-proxy" \
-    && pip --no-cache-dir install mlflow-server-proxy
+    && pip --no-cache-dir install git+https://github.com/americanexpress/mlflow-server-proxy
+
+RUN echo "omegaconf" \
+    && pip --no-cache-dir install omegaconf
+
+RUN echo "dotenv" \
+    && pip --no-cache-dir install python-dotenv
+
+RUN echo "hydra-core" \
+    && pip --no-cache-dir install hydra-core
+
 
 # disable announcement extension to get rid of newsletter subscription pop-up
 RUN jupyter labextension disable "@jupyterlab/apputils-extension:announcements"

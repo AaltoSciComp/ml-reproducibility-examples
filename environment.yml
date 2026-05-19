@@ -7,12 +7,16 @@ dependencies:
   - accelerate
   - black
   - huggingface_hub
+  - hydra-core
   - ipykernel
   - jupyter-black
+  - jupyterlab
   - lightning
   - matplotlib
   - mlflow
+  - omegaconf
   - pandas
+  - python-dotenv
   - pytorch-gpu
   - scikit-learn
   - tensorboard

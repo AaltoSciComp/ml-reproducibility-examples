@@ -10,6 +10,7 @@ matplotlib
 mlflow
 omegaconf
 pandas
+python-dotenv
 scikit-learn
 tensorboard
 torch
