@@ -106,3 +106,6 @@ RUN echo "hydra-core" \
 
 # disable announcement extension to get rid of newsletter subscription pop-up
 RUN jupyter labextension disable "@jupyterlab/apputils-extension:announcements"
+
+# Allow displaying hidden files
+RUN echo "c.ContentsManager.allow_hidden = True" >> /etc/jupyter/jupyter_server_config.py
