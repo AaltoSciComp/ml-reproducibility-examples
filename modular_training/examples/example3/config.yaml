@@ -2,6 +2,9 @@ dataset:
   datamodule: MNISTDataModule
   batch_size: 64
   data_dir: ../../../data
+optimizer:
+  type: AdamW
+  lr: 0.001
 outputs:
   output_dir: outputs
 trainer:

@@ -20,6 +20,8 @@ from models import SimpleMLP
 
 import os.path
 
+import hydra
+
 
 def plot_training(metrics):
 
@@ -33,36 +35,33 @@ def plot_training(metrics):
     return fig, (ax1, ax2)
 
 
-def main():
+@hydra.main(version_base="1.2", config_path=".", config_name="config")
+def main(conf):
 
-    # Set model parameters
-    data_dir = "../../../data"
-    batch_size = 32
-    hidden_size = 20
-
-    training_plot = "training_results.png"
-    log_dir = "logs"
-    experiment_name = "mnist_example"
+    log_dir = hydra.core.hydra_config.HydraConfig.get().runtime.output_dir
+    training_plot = os.path.join(log_dir, f"{conf.experiment_name}.png")
 
     # Create model and datamodule
-    model = SimpleMLP(hidden_size=hidden_size)
-    datamodule = MNISTDataModule(data_dir=data_dir, batch_size=batch_size)
+    model = SimpleMLP(hidden_size=conf.model.hidden_size)
+    datamodule = MNISTDataModule(
+        data_dir=conf.dataset.data_dir, batch_size=conf.dataset.batch_size
+    )
 
     # Specify logger
 
-    logger = CSVLogger(log_dir, name=experiment_name)
+    logger = CSVLogger(log_dir, name=conf.experiment_name)
 
     # Train the model
     trainer = L.Trainer(
-        max_epochs=5,
-        callbacks=[TQDMProgressBar(refresh_rate=100)],
+        max_epochs=conf.trainer.max_epochs,
+        callbacks=[TQDMProgressBar(refresh_rate=conf.trainer.refresh_rate)],
         logger=logger,
     )
     trainer.fit(model, datamodule=datamodule)
 
     # Visualize training
     metrics = pd.read_csv(
-        os.path.join(log_dir, experiment_name, "version_0", "metrics.csv")
+        os.path.join(log_dir, conf.experiment_name, "version_0", "metrics.csv")
     )
     fig, axes = plot_training(metrics)
     fig.savefig(training_plot)

@@ -1,9 +1,15 @@
 dataset:
-  datamodule: "MNISTDataModule"
-  batch_size: 32
-training:
-  num_epochs: 10
+  datamodule: MNISTDataModule
+  batch_size: 64
+  data_dir: ./data
+optimizer:
+  type: AdamW
+  lr: 0.001
+outputs:
+  output_dir: outputs
+trainer:
+  max_epochs: 10
 model:
-  model_type: "SimpleMLP"
-  num_hidden_units:
-    - 20
+  model_type: SimpleMLP
+  hidden_size: 20
+experiment_name: mnist_example

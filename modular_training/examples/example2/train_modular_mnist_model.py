@@ -12,6 +12,9 @@ import numpy as np
 
 from models import SimpleMLP
 
+import os
+import hydra
+
 
 def create_dataloaders(train_dataset, test_dataset, batch_size=32):
     # Set up data loaders based on datasets
@@ -32,9 +35,7 @@ def create_model(model_structure, optimizer_class, device="cpu"):
     return model, optimizer
 
 
-def train(
-    model, dataloader, criterion, optimizer, batch_size=32, epochs=5, device="cpu"
-):
+def train(model, dataloader, criterion, optimizer, epochs=5, device="cpu"):
     # Define training function
 
     model.train()
@@ -77,7 +78,7 @@ def train(
     return losses, accuracies
 
 
-def test(model, dataloader, criterion, device="cpu"):
+def test(model, dataloader, device="cpu"):
     # Define testing function
     model.eval()
 
@@ -116,26 +117,27 @@ def plot_training(losses, accuracies):
     return fig, (ax1, ax2)
 
 
-def main():
+@hydra.main(version_base="1.2", config_path=".", config_name="config")
+def main(conf):
     # ------------------
     # Training variables
     # ------------------
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    data_dir = "../../../data"
     train_dataset = datasets.MNIST(
-        data_dir, train=True, download=True, transform=ToTensor()
+        conf.dataset.data_dir, train=True, download=True, transform=ToTensor()
     )
-    test_dataset = datasets.MNIST(data_dir, train=False, transform=ToTensor())
-    batch_size = 32
+    test_dataset = datasets.MNIST(
+        conf.dataset.data_dir, train=False, transform=ToTensor()
+    )
 
     model_structure = SimpleMLP
     optimizer_class = torch.optim.AdamW
     criterion = torch.nn.CrossEntropyLoss()
-    epochs = 5
 
-    training_plot = "training_results.png"
+    log_dir = hydra.core.hydra_config.HydraConfig.get().runtime.output_dir
+    training_plot = os.path.join(log_dir, f"{conf.experiment_name}.png")
 
     # --------------------
     # Actual training code
@@ -143,7 +145,7 @@ def main():
 
     # Set up data loaders
     train_loader, test_loader = create_dataloaders(
-        train_dataset, test_dataset, batch_size=32
+        train_dataset, test_dataset, batch_size=conf.dataset.batch_size
     )
 
     # Set up model and optimizer
@@ -155,8 +157,7 @@ def main():
         train_loader,
         criterion,
         optimizer,
-        batch_size=batch_size,
-        epochs=epochs,
+        epochs=conf.trainer.max_epochs,
         device=device,
     )
 
@@ -165,7 +166,7 @@ def main():
     fig.savefig(training_plot)
 
     # Test the model
-    test(model, test_loader, criterion, device=device)
+    test(model, test_loader, device=device)
 
 
 if __name__ == "__main__":
